@@ -1,0 +1,8 @@
+overwrite: true
+schema: "pages/api/schema.graphql"
+documents: "pages/**/*.tsx"
+generates:
+  pages/api/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"

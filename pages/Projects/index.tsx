@@ -4,8 +4,46 @@ import { Card, Image, Button, Icon, Segment, Header } from "semantic-ui-react";
 import { DeploymentState, Repository } from "../api/generated/graphql";
 import { useGithubApi } from "../api/githubClient";
 import styles from "../../styles/Projects.module.css";
-import { REPOSITORIES_LISTING_DOCUMENT } from "./REPOSITORIES_LISTING_DOCUMENT";
-import { BarChart } from "./components/BarChart";
+import BarChart from "./components/BarChart";
+import { gql } from "graphql-request";
+
+const REPOSITORIES_LISTING_DOCUMENT = gql`
+  {
+    user(login: "KseniiaChumachenko") {
+      repositories(
+        last: 40
+        orderBy: { field: UPDATED_AT, direction: DESC }
+        privacy: PUBLIC
+      ) {
+        totalCount
+        nodes {
+          name
+          createdAt
+          updatedAt
+          description
+          url
+          languages(last: 10) {
+            edges {
+              #              cursor
+              node {
+                name
+                color
+                id
+              }
+              size
+            }
+          }
+          deployments(last: 1) {
+            nodes {
+              payload
+              state
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 function Projects() {
   const { data, error } = useGithubApi(REPOSITORIES_LISTING_DOCUMENT);

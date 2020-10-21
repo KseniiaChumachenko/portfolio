@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "gql-gen": "graphql-codegen --config codegen.yml"
+    "gql-gen": "graphql-codegen --config codegen.yml",
+    "heroku-postbuild": "yarn run build"
   },
   "dependencies": {
     "graphql": "^15.3.0",

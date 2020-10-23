@@ -95,9 +95,10 @@ function Projects() {
                 <Card.Content extra>
                   <div className="ui two buttons">
                     {deployments?.nodes?.map(
-                      (d) =>
+                      (d, index) =>
                         d.state === DeploymentState.Active && (
                           <Button
+                            key={index}
                             basic
                             color="green"
                             onClick={handleOpenLinkInNewTab(

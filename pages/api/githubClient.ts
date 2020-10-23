@@ -1,12 +1,9 @@
 import { GraphQLClient } from "graphql-request/dist";
 import useSWR from "swr";
 
-const GITHUB_TOKEN = "00c43de6378baee3fae5b3188fcd539314eb8ca9";
-const ENDPOINT = "https://api.github.com/graphql";
-
-export const client = new GraphQLClient(ENDPOINT, {
+export const client = new GraphQLClient(process.env.NEXT_PUBLIC_GITHUB_API, {
   headers: {
-    authorization: `Bearer ${GITHUB_TOKEN}`,
+    authorization: `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
   },
 });
 

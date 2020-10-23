@@ -1,8 +1,9 @@
 import React from "react";
 import Head from "next/head";
-import Profile from "./profile";
+import About from "./About";
 import Projects from "./Projects";
 import styles from "../styles/Home.module.css";
+import Intro from "./Intro";
 
 export default function Home() {
   return (
@@ -12,7 +13,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Profile />
+        <Intro />
+        <About />
         <Projects />
       </main>
     </div>

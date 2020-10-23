@@ -2,11 +2,10 @@
     margin: 24px;
 }
 
-.sectionName{
-    position: absolute;
-    margin-top: -24px;
+.imagePlaceholder{
+    height: 590px;
+    max-width: unset !important;
 }
-
 
 .title{
 

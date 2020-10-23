@@ -1,55 +1,26 @@
 import React from "react";
-import { Card, Image, Button, Icon, Segment, Header } from "semantic-ui-react";
+import { Button, Card, Header, Icon, Image } from "semantic-ui-react";
 
+import REPOSITORIES_LISTING_DOCUMENT from "../api/documents/REPOSITORIES_LISTING_DOCUMENT";
 import { DeploymentState, Repository } from "../api/generated/graphql";
 import { useGithubApi } from "../api/githubClient";
-import styles from "../../styles/Projects.module.css";
-import BarChart from "./components/BarChart";
-import { gql } from "graphql-request";
 
-const REPOSITORIES_LISTING_DOCUMENT = gql`
-  {
-    user(login: "KseniiaChumachenko") {
-      repositories(
-        last: 40
-        orderBy: { field: UPDATED_AT, direction: DESC }
-        privacy: PUBLIC
-      ) {
-        totalCount
-        nodes {
-          name
-          createdAt
-          updatedAt
-          description
-          url
-          languages(last: 10) {
-            edges {
-              #              cursor
-              node {
-                name
-                color
-                id
-              }
-              size
-            }
-          }
-          deployments(last: 1) {
-            nodes {
-              payload
-              state
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import BarChart from "./components/BarChart";
+import ErrorCard from "./components/ErrorCard";
+import styles from "../../styles/Projects.module.css";
+
+const handleOpenLinkInNewTab = (link: string) => () =>
+  window.open(link, "_blank");
+
+const parsePayload = (payload: string) => JSON.parse(JSON.parse(payload));
+
+const parseDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleString("en-GB", { timeZone: "UTC" });
+};
 
 function Projects() {
   const { data, error } = useGithubApi(REPOSITORIES_LISTING_DOCUMENT);
-
-  const handleOpenLinkInNewTab = (link: string) => () =>
-    window.open(link, "_blank");
 
   return (
     <div className={styles.container}>
@@ -66,20 +37,21 @@ function Projects() {
                 url,
                 languages,
                 deployments,
+                openGraphImageUrl,
               }: Repository,
               index: number
             ) => (
-              <Card key={index}>
+              <Card
+                key={index}
+                onClick={() => {
+                  console.log("TODO: open modal"); // TODO: open modal
+                }}
+              >
+                <Image wrapped ui={false} src={openGraphImageUrl} />
                 <Card.Content>
-                  <Image
-                    floated="right"
-                    size="mini"
-                    src="/images/avatar/large/steve.jpg"
-                  />
                   <Card.Header>{name}</Card.Header>
-                  <Card.Meta>Created at: {createdAt}</Card.Meta>
-                  <Card.Meta>Last updated: {updatedAt}</Card.Meta>
-                  <Card.Description>{description}</Card.Description>
+                  <Card.Meta>Created at: {parseDate(createdAt)}</Card.Meta>
+                  <Card.Meta>Last updated: {parseDate(updatedAt)}</Card.Meta>
                   <Card.Description>
                     <BarChart
                       items={languages.edges.map((e) => {
@@ -89,8 +61,10 @@ function Projects() {
                           backgroundColor: e.node.color,
                         };
                       })}
+                      style={{ marginTop: 16 }}
                     />
                   </Card.Description>
+                  <Card.Description>{description}</Card.Description>
                 </Card.Content>
                 <Card.Content extra>
                   <div className="ui two buttons">
@@ -102,7 +76,7 @@ function Projects() {
                             basic
                             color="green"
                             onClick={handleOpenLinkInNewTab(
-                              JSON.parse(d.payload).web_url
+                              parsePayload(d.payload).web_url
                             )}
                           >
                             Open deployment
@@ -125,14 +99,7 @@ function Projects() {
           )}
         </Card.Group>
       ) : (
-        error && (
-          <Segment color={"red"} size={"huge"}>
-            <Header icon>
-              <Icon name="github" />
-              Seems like Git-hub API is currently not available :(
-            </Header>
-          </Segment>
-        )
+        error && <ErrorCard />
       )}
     </div>
   );

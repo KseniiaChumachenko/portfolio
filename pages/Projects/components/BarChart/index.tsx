@@ -8,9 +8,10 @@ interface P {
     backgroundColor: string;
   }[];
   legend?: boolean;
+  style?: object;
 }
 
-function BarChart({ items, legend = true }: P) {
+function BarChart({ items, legend = true, style }: P) {
   const arrWithValues = items?.map((i) => i.value);
   const totalCount = arrWithValues?.reduce((a, b) => a + b, 0);
   const arrWithValuesAsPercents = arrWithValues?.map((v) =>
@@ -18,7 +19,7 @@ function BarChart({ items, legend = true }: P) {
   );
 
   return (
-    <div>
+    <div style={style}>
       <div
         style={{
           width: "100%",

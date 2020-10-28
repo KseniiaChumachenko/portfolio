@@ -18,7 +18,6 @@ const REPOSITORIES_LISTING_DOCUMENT = gql`
           openGraphImageUrl
           languages(last: 10) {
             edges {
-              #              cursor
               node {
                 name
                 color

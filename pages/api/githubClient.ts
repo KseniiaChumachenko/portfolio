@@ -1,5 +1,6 @@
 import { GraphQLClient } from "graphql-request/dist";
 import useSWR from "swr";
+import { RequestDocument } from "graphql-request/dist/types";
 
 export const client = new GraphQLClient(process.env.NEXT_PUBLIC_GITHUB_API, {
   headers: {
@@ -7,9 +8,9 @@ export const client = new GraphQLClient(process.env.NEXT_PUBLIC_GITHUB_API, {
   },
 });
 
-export const githubFetcher = (query) => client.request(query);
+export const githubFetcher = (query: RequestDocument, variables: any) =>
+  client.request(query, variables);
 
 export function useGithubApi(query) {
-  const res = useSWR(query, githubFetcher);
-  return res;
+  return useSWR(query, githubFetcher);
 }
